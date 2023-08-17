@@ -1,6 +1,7 @@
 from random import randint
 
 class TicTacToe:
+    # instantiating the TicTacToe class
     def __init__(self) -> None:
         self.current_player = None
         self.player = None
@@ -53,6 +54,7 @@ class TicTacToe:
                 else:
                     print(current_state[(row, col)], end=" ")
             print()
+    
     # taking the user input
     def user_input(self):
         user_move = int(input("Enter your move: "))
@@ -70,7 +72,7 @@ class TicTacToe:
         # check if the move is taken already
         if current_state[(row, col)] is not None:
             print("Move already taken")
-            self.user_input()
+            (row, col) = self.user_input()
 
         # returning the row and column move from the user
         return (row, col)
@@ -78,7 +80,6 @@ class TicTacToe:
     # storing the game state
     def update_game_state(self, player, move):
         self.game_state[move] = player
-
 
     # defining winner in the game
     def winner(self):
@@ -145,8 +146,7 @@ class TicTacToe:
             col = randint(0, 2)
 
         self.update_game_state(player=self.computer_symbol, move=(row, col))         
-
-    
+  
     # defining if the game is full
     def is_game_full(self):
         for key, value in self.game_state.items():
@@ -193,13 +193,8 @@ class TicTacToe:
             print(f"{self.player} won")
         else:
             print("Computer won")
-
-        
-                
-
-
-
-
+      
+# running the main function
 if __name__ == "__main__":
     game = TicTacToe()
     game.play()
