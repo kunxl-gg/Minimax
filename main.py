@@ -1,16 +1,17 @@
-class Plyaer:
-    def __init__(self, given_name, given_symbol) -> None:
-        self.name = given_name
-        self.symbol = given_symbol
+from random import randint
 
 class TicTacToe:
     def __init__(self) -> None:
         self.current_player = None
         self.player = None
-        self.computer_symbol = None
         self.player_symbol = None
-        self.player_moves = {"X": [], "O": []} 
-        self.game_state = None
+        self.computer_symbol = None
+        self.game_state = dict()
+
+        # initializing the game state
+        for row in range(3):
+            for col in range(3):
+                self.game_state[(row, col)] = None
 
     # defining the input from the user
     def player_details(self):
@@ -18,7 +19,7 @@ class TicTacToe:
         if self.player is None:
             self.player = input("Enter your name here: ")
 
-        player_symbol = input("Enter your symbol here: ")
+        player_symbol = input("Which symbol would you like to choose (X/O): ")
 
         # checking for the correct symbol
         if player_symbol not in ["X", "O", "x", "o"]:
@@ -30,15 +31,7 @@ class TicTacToe:
         # assigning the computer symbol
         self.computer_symbol = "O" if self.player_symbol == "X" else "X"
     
-    # printing the board 
-    def print_board(self):
-        for _ in range(3):
-            if _ == 2:
-                print("    |" * 3)
-            print("    |" * 2)
-            print(" ---" * 3)
-
-    # deciding who would go first in the game
+    # defining who goes first 
     def first_player(self):
         choice = input("Would you like to go first (Y/N): ")
         # check if the choice is valid
@@ -49,24 +42,41 @@ class TicTacToe:
         # assigning the current player 
         self.current_player = self.player if choice in ["Y", "y"] else "Computer"
 
+    # printing the board 
+    def print_board(self):
+        current_state = self.game_state
+
+        for row in range(3):
+            for col in range(3):
+                if current_state[(row, col)] is None:
+                    print("-", end=" ")
+                else:
+                    print(current_state[(row, col)], end=" ")
+            print()
     # taking the user input
     def user_input(self):
         user_move = int(input("Enter your move: "))
+        current_state = self.game_state
 
         # checking if the user move is valid
         if(user_move not in range(1, 10)):
             print("Invalid move")
             self.user_input()
+        
+        # finding out the row and column from the user move
+        row = ( user_move - 1 ) // 3
+        col = ( user_move - 1 ) % 3
+
+        # check if the move is taken already
+        if current_state[(row, col)] is not None:
+            print("Move already taken")
+            self.user_input()
+
+        # returning the row and column move from the user
+        return (row, col)
 
     # storing the game state
     def update_game_state(self, player, move):
-        if self.game_state is None:
-            self.game_state = dict()
-
-            for row in range(3):
-                for col in range(3):
-                    self.game_state[(row, col)] = None
-
         self.game_state[move] = player
 
 
@@ -122,7 +132,19 @@ class TicTacToe:
             return initial_value
         
         return None
-               
+
+    # defining the computer move
+    def computer_move(self):
+        current_state = self.game_state
+
+        row = randint(0, 2)
+        col = randint(0, 2)
+
+        while current_state[(row, col)] is not None:
+            row = randint(0, 2)
+            col = randint(0, 2)
+
+        self.update_game_state(player=self.computer_symbol, move=(row, col))         
 
     
     # defining if the game is full
@@ -136,9 +158,9 @@ class TicTacToe:
     # defining if the game is over
     def is_game_over(self):
         winner = self.winner()
-        if winner is not None:
-            return True
-        elif self.is_game_full():
+        is_full = self.is_game_full()
+
+        if winner is not None or is_full:
             return True
         else:
             return False
@@ -148,22 +170,33 @@ class TicTacToe:
         self.player_details()
         self.first_player()
         self.print_board()
-        self.update_game_state(player="X", move=(0, 0))
 
         while not self.is_game_over():
             if self.current_player == self.player:
-                self.user_input()
+                move = self.user_input()
+                self.update_game_state(player=self.player_symbol, move=move)
+                self.current_player = "Computer"
+
+                # print the board
                 self.print_board()
-            
             else:
+                print("Computer's turn")
                 self.computer_move()
+                self.current_player = self.player
                 self.print_board()
 
-            if self.is_game_full():
-                break
+        
+        winner = self.winner()
+        if winner is None:
+            print("It's a tie")
+        elif winner == self.player_symbol:
+            print(f"{self.player} won")
+        else:
+            print("Computer won")
 
-            self.user_input()
-            self.print_board()
+        
+                
+
 
 
 
