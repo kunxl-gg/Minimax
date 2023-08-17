@@ -49,10 +49,6 @@ class TicTacToe:
         # assigning the current player 
         self.current_player = self.player if choice in ["Y", "y"] else "Computer"
 
-    # checking if the game is over
-    def is_game_over(self):
-        pass
-
     # taking the user input
     def user_input(self):
         user_move = int(input("Enter your move: "))
@@ -131,15 +127,21 @@ class TicTacToe:
     
     # defining if the game is full
     def is_game_full(self):
-        for pair in self.game_state:
-            if self.game_state[pair] is None:
+        for key, value in self.game_state.items():
+            if value is None:
                 return False
             
         return True
     
     # defining if the game is over
     def is_game_over(self):
-        pass
+        winner = self.winner()
+        if winner is not None:
+            return True
+        elif self.is_game_full():
+            return True
+        else:
+            return False
 
     # defining the final function to play the game
     def play(self):
