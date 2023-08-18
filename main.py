@@ -14,34 +14,56 @@ class TicTacToe:
             for col in range(3):
                 self.game_state[(row, col)] = None
 
+        # initializing the player details
+        player_name = self.player_name()
+        player_symbol = self.player_symbols()
+
+        while player_symbol is None:
+            print("Invalid choice")
+            player_symbol = self.player_symbols()
+        
+        self.player = player_name
+        self.player_symbol = player_symbol
+        self.computer_symbol = "O" if player_symbol == "X" else "X"
+
+        # decide who goes first
+        first_player = self.first_player()
+
+        while first_player is None:
+            print("Invalid choice")
+            first_player = self.first_player()
+
+        self.current_player = self.player if first_player == "Y" else "Computer"
+
+        # give the initial instructions"
+        print("To make your move enter digits from 1 - 9")
+        count = 1
+        for row in range(3):
+            for col in range(3):
+                print(count, end=" ")
+            print()
+
     # defining the input from the user
-    def player_details(self):
-        # checking if the player name has been entered
-        if self.player is None:
-            self.player = input("Enter your name here: ")
+    def player_name(self):
+        player_details = input("Enter your name: ")
+        return player_details
 
+    def player_symbols(self):
         player_symbol = input("Which symbol would you like to choose (X/O): ")
-
-        # checking for the correct symbol
         if player_symbol not in ["X", "O", "x", "o"]:
-            print("Invalid symbol")
-            self.player_details()
+            return None
         else:
-            self.player_symbol = player_symbol.upper()
-
-        # assigning the computer symbol
-        self.computer_symbol = "O" if self.player_symbol == "X" else "X"
+            return player_symbol.upper()
     
     # defining who goes first 
     def first_player(self):
         choice = input("Would you like to go first (Y/N): ")
         # check if the choice is valid
         if choice not in ["Y", "N", "y", "n"]:
-            print("Invalid choice")
-            self.first_player()
+            return None
+        else:
+            return choice.upper()
 
-        # assigning the current player 
-        self.current_player = self.player if choice in ["Y", "y"] else "Computer"
 
     # printing the board 
     def print_board(self):
@@ -167,9 +189,6 @@ class TicTacToe:
 
     # defining the final function to play the game
     def play(self):
-        self.player_details()
-        self.first_player()
-        self.print_board()
 
         while not self.is_game_over():
             if self.current_player == self.player:
