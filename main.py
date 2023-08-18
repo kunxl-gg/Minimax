@@ -41,6 +41,7 @@ class TicTacToe:
         for row in range(3):
             for col in range(3):
                 print(count, end=" ")
+                count += 1
             print()
 
     # defining the input from the user
@@ -84,8 +85,7 @@ class TicTacToe:
 
         # checking if the user move is valid
         if(user_move not in range(1, 10)):
-            print("Invalid move")
-            self.user_input()
+            return "Invalid move"
         
         # finding out the row and column from the user move
         row = ( user_move - 1 ) // 3
@@ -93,8 +93,7 @@ class TicTacToe:
 
         # check if the move is taken already
         if current_state[(row, col)] is not None:
-            print("Move already taken")
-            (row, col) = self.user_input()
+            return "Move already taken"
 
         # returning the row and column move from the user
         return (row, col)
@@ -192,15 +191,22 @@ class TicTacToe:
 
         while not self.is_game_over():
             if self.current_player == self.player:
+
+                # taking the input from the user
                 move = self.user_input()
+                while move in ["Invalid move", "Move already taken"]:
+                    print(move)
+                    move = self.user_input()
+
+                # once the move is valid, update the game state
                 self.update_game_state(player=self.player_symbol, move=move)
                 self.current_player = "Computer"
 
-                # print the board
+                # print the board state
                 self.print_board()
             else:
-                print("Computer's turn")
                 self.computer_move()
+                print("The Computer has played its move")
                 self.current_player = self.player
                 self.print_board()
 

@@ -20,7 +20,6 @@ class TicTacToeTest(unittest.TestCase):
     def test_is_game_over(self):
         self.assertEqual(self.game.is_game_over(), False)
 
-
     def test_first_player(self):
         self.assertEqual(self.game.current_player, "Kunal Tiwari")
         self.game.current_player = "Computer"
