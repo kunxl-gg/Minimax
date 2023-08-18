@@ -109,7 +109,7 @@ class TicTacToe:
         
         # check if the current state is None
         if current_state is None:
-            return "No winner yet"
+            return "The game has not started yet"
         
         # check rows
         for row in range(3):
